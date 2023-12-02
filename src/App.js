@@ -1,25 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import { useReducer, useState } from 'react';
+import AddTask from './components/AddTask.js';
+import TaskList from './components/TaskList.js';
+import './App.css'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+let nextId = 0;
+const initialTasks = [];
+
+export default function TaskApp() {
+    const [tasks, setTasks] = useState(initialTasks);
+    useReducer()
+
+    function handleAddTask(text) {
+        setTasks([
+            ...tasks,
+            {
+                id: nextId++,
+                text: text,
+                done: false,
+            },
+        ]);
+    }
+
+    function handleChangeTask(task) {
+        setTasks(
+            tasks.map((t) => {
+                if (t.id === task.id) {
+                    return task;
+                } else {
+                    return t;
+                }
+            })
+        );
+    }
+
+    function handleDeleteTask(taskId) {
+        setTasks(tasks.filter((t) => t.id !== taskId));
+    }
+
+    return (
+        <div className='App'>
+            <h1>Prague itinerary</h1>
+            <AddTask onAddTask={handleAddTask} />
+            <TaskList
+                tasks={tasks}
+                onChangeTask={handleChangeTask}
+                onDeleteTask={handleDeleteTask}
+            />
+        </div>
+    );
 }
-
-export default App;
