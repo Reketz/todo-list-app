@@ -39,7 +39,7 @@ export default function TaskApp() {
 
     return (
         <div className='App'>
-            <h1>Prague itinerary</h1>
+            <h1>Todo List</h1>
             <AddTask onAddTask={handleAddTask} />
             <TaskList
                 tasks={tasks}
