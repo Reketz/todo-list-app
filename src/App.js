@@ -6,35 +6,56 @@ import './App.css'
 let nextId = 0;
 const initialTasks = [];
 
+function taskReducer(tasks, action) {
+    switch(action.type) {
+        case "add":
+            return [
+                    ...tasks,
+                    {
+                        id: nextId++,
+                        text: action.text,
+                        done: false,
+                    },
+                ]
+        case "update":
+            return tasks.map((t) => {
+                if (t.id === action.task.id) {
+                    return action.task;
+                }
+
+                return t;
+                
+            })
+        case "delete":
+            return tasks.filter((t) => t.id !== action.taskId)
+        default:
+            console.log("O tipo não existe");
+    }
+
+}
+
 export default function TaskApp() {
-    const [tasks, setTasks] = useState(initialTasks);
-    useReducer()
+    const [tasks, dispatch] = useReducer(taskReducer, initialTasks);
 
     function handleAddTask(text) {
-        setTasks([
-            ...tasks,
-            {
-                id: nextId++,
-                text: text,
-                done: false,
-            },
-        ]);
+        dispatch({
+            type: "add",
+            text:text
+        });
     }
 
     function handleChangeTask(task) {
-        setTasks(
-            tasks.map((t) => {
-                if (t.id === task.id) {
-                    return task;
-                } else {
-                    return t;
-                }
-            })
-        );
+        dispatch({
+            type: "update",
+            task: task
+        });
     }
 
     function handleDeleteTask(taskId) {
-        setTasks(tasks.filter((t) => t.id !== taskId));
+        dispatch({
+            type: "delete",
+            taskId: taskId
+        });
     }
 
     return (
